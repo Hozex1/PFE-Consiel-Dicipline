@@ -423,26 +423,14 @@ function NewMeeting({ students, preselected = [], onSave }) {
     agenda: "", president: "Prof. Hamidi",
     members: [], participants: [],
   });
-  const [newParticipant, setNewParticipant] = useState("");
   const [saved, setSaved] = useState(false);
 
-  const STAFF = ["Prof. Hamidi","Prof. Kaci","Prof. Belkacem","Dr. Merniz","Prof. Saadi","Dr. Amrani"];
+  const ASSEMBLED_COUNCIL = ["Prof. Hamidi", "Prof. Kaci", "Dr. Merniz", "Prof. Belkacem"];
 
   const removeStudent = (id) => setSelectedStudents(prev => prev.filter(s => s.id !== id));
   const addStudent = (id) => {
     const s = students.find(x => x.id === id);
     if (s && !selectedStudents.find(x => x.id === id)) setSelectedStudents(prev => [...prev, s]);
-  };
-
-  const toggleMember = (name) => setForm(f => ({
-    ...f, members: f.members.includes(name) ? f.members.filter(x => x !== name) : [...f.members, name],
-  }));
-
-  const addParticipant = () => {
-    if (newParticipant.trim()) {
-      setForm(f => ({ ...f, participants: [...f.participants, newParticipant.trim()] }));
-      setNewParticipant("");
-    }
   };
 
   const handleSave = () => {
@@ -543,41 +531,26 @@ function NewMeeting({ students, preselected = [], onSave }) {
           </Card>
         </div>
 
-        {/* Right: Participants */}
+        {/* Right: Assembled Council (fixed) */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <Card style={{ padding: 20 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", marginBottom: 12 }}>Participants</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#0F172A", marginBottom: 4 }}>Conseil assemblé</div>
+            <div style={{ fontSize: 12, color: "#94A3B8", marginBottom: 16 }}>La composition du conseil est fixe et définie par l'établissement.</div>
 
             <div style={{ marginBottom: 14 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: ".05em" }}>Président</label>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>Président</label>
               <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: "#F0FDF4", borderRadius: 8, border: "1px solid #BBF7D0" }}>
                 <Avatar name={form.president} size={24} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: "#065F46" }}>{form.president}</span>
               </div>
             </div>
 
-            <div style={{ marginBottom: 14 }}>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>Membres du conseil</label>
-              {STAFF.filter(n => n !== form.president).map(name => (
-                <label key={name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", cursor: "pointer", fontSize: 13 }}>
-                  <input type="checkbox" checked={form.members.includes(name)} onChange={() => toggleMember(name)} />
-                  <Avatar name={name} size={22} />
-                  {name}
-                </label>
-              ))}
-            </div>
-
             <div>
-              <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>Participants additionnels</label>
-              <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-                <Input placeholder="Nom du participant…" value={newParticipant} onChange={e => setNewParticipant(e.target.value)} style={{ flex: 1 }} />
-                <Button variant="secondary" onClick={addParticipant} style={{ flexShrink: 0 }}>+</Button>
-              </div>
-              {form.participants.map((p, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0", fontSize: 13 }}>
-                  <span>👤 {p}</span>
-                  <button onClick={() => setForm(f => ({ ...f, participants: f.participants.filter((_, j) => j !== i) }))}
-                    style={{ border: "none", background: "none", cursor: "pointer", color: "#94A3B8", fontSize: 14 }}>×</button>
+              <label style={{ fontSize: 11, fontWeight: 600, color: "#64748B", display: "block", marginBottom: 8, textTransform: "uppercase", letterSpacing: ".05em" }}>Membres</label>
+              {ASSEMBLED_COUNCIL.filter(n => n !== form.president).map(name => (
+                <div key={name} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 8, background: "#F8FAFC", marginBottom: 6, border: "1px solid #E2E8F0" }}>
+                  <Avatar name={name} size={24} />
+                  <span style={{ fontSize: 13, color: "#334155", fontWeight: 500 }}>{name}</span>
                 </div>
               ))}
             </div>
@@ -747,12 +720,9 @@ function Archives({ meetings, students, onViewMeeting }) {
 
   return (
     <div>
-      <div style={{ marginBottom: 24, display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", marginBottom: 4 }}>Archives</h1>
-          <p style={{ color: "#64748B", fontSize: 14 }}>Historique complet des conseils disciplinaires</p>
-        </div>
-        <Button variant="secondary">⬇ Exporter PDF</Button>
+      <div style={{ marginBottom: 24 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0F172A", marginBottom: 4 }}>Archives</h1>
+        <p style={{ color: "#64748B", fontSize: 14 }}>Historique complet des conseils disciplinaires</p>
       </div>
 
       <Card style={{ padding: 16, marginBottom: 16 }}>
